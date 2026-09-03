@@ -1,0 +1,49 @@
+{
+  "name": "go-comment",
+  "description": "Score your own LinkedIn comments, posts, DMs and connections. Daily streak, an evolving parrot, nothing leaves your device.",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Phonografik/go-comment.git"
+  },
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --exclude 'test/build/**'",
+    "test:build": "vitest run test/build",
+    "guard": "node scripts/no-network-guard.mjs",
+    "icons": "node scripts/render-icons.mjs",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run build:firefox && npm run test:build && npm run guard",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@wxt-dev/module-react": "^1.1.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.12.0",
+    "happy-dom": "^20.13.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.69.0",
+    "vitest": "^4.1.11",
+    "web-ext": "^10.5.0",
+    "wxt": "^0.21.3"
+  }
+}

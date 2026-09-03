@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cyan: #00d4dd;
+  --color-teal: #008b8d;
+  --color-violet: #6b4d9e;
+  --color-amber: #f0c000;
+  --color-orange: #ff6b35;
+  --color-ink: #12242a;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+}
