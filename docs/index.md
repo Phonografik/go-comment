@@ -33,6 +33,9 @@ only. It is never synced to another device; if you change machines, use export a
 - **Only if you upgraded from version 1:** your version 1 lifetime totals and weekly-streak
   numbers, shown as an archive line, plus a copy of the version 1 data kept for 30 days in case
   the upgrade needs to be undone, then deleted.
+- **The last parrot stage the popup showed you, and the week it saw it**, so it can tell you when
+  your parrot moults. A stage number and a week key, kept in the popup's own local storage on your
+  device, never exported, cleared by uninstall.
 
 Held in memory only (`storage.session`), never written to disk, never exported, and cleared when
 you close your browser: a random salt, and the current day's message fingerprints described
@@ -88,7 +91,8 @@ one above. On Firefox, the add-on declares its data collection as "none".
 
 ## Export and import
 
-The settings page can export everything under "What it stores" as a single JSON file, saved
+The settings page can export everything under "What it stores" (except the popup's parrot-stage
+memory, which is cosmetic) as a single JSON file, saved
 wherever you choose. The file contains those counts and nothing else: no session data, no
 fingerprints. It's yours to keep, move to another machine, or import back (replace or merge).
 Nothing is uploaded anywhere in the process, and no download permission is used.
