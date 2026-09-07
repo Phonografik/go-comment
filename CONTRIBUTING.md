@@ -33,10 +33,14 @@ Step by step:
 5. **Do the action.** Submit the comment, send the message, click Connect. Wait for the page to
    show it happened.
 6. **Capture *after*:** `captureFixture($0, 'comment.after')`.
-7. **Save both** into `test/fixtures/linkedin/` as `comment.before.html` and `comment.after.html`.
-   Use the existing action names: `comment`, `reply`, `post`, `repost`, `connect`, `dm-thread`,
-   `dm-overlay`. Negatives (`post-discarded`, `comment-deleted`, `dm-incoming`, `reaction`) are
-   snapshots of things that must *not* count, and they follow the same shape.
+7. **Save both** into `test/fixtures/linkedin/` as `comment.before.html` and `comment.after.html`
+   (the snippet copies the sanitised HTML to your clipboard). Use the existing action names:
+   `comment`, `reply`, `post`, `repost`, `connect`, `dm-thread`, `dm-overlay`. Negatives
+   (`post-discarded`, `comment-deleted`, `dm-incoming`, `reaction`) are snapshots of things that
+   must *not* count, and they follow the same shape. Connect is the one action with an
+   intermediate state: capture `connect.before`, click Connect, capture the add-a-note dialog as
+   `connect.dialog`, send, then capture `connect.after`. `captureFixture` accepts `.dialog` as a
+   name for exactly this.
 8. **Run `npm test`.** It should go red, with the new fixture as the failing test. If it stays
    green, the fixture doesn't reproduce the break: capture a tighter container or a different
    moment.
@@ -55,8 +59,11 @@ Step by step:
 ### What the snippet scrubs
 
 `captureFixture` serialises the container's HTML with every text node replaced by same-length
-lorem, every `href` replaced with `#`, `src` attributes stripped, thread ids replaced with
-`FIXTURE-1`, URNs randomised but pattern-preserved, and `<code>` JSON blocks removed. It is built
+lorem, every `href` replaced with `#` except that `/in/<slug>/` links become
+`/in/FIXTURE-PERSON-1/`, `/in/FIXTURE-PERSON-2/`… and `/messaging/thread/<id>/` ids become
+`FIXTURE-1`, `FIXTURE-2`… (one per distinct id, kept consistent across a before/after pair),
+`src` attributes stripped, URNs randomised but pattern-preserved, and `<code>` JSON blocks
+removed. It is built
 to be safe for a public repository. Still, read the file before you commit it. If you can see a
 name, a message or a post in there, don't push it. Open an issue instead and we'll capture it
 another way.
