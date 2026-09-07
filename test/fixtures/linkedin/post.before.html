@@ -1,0 +1,56 @@
+<!-- PROVISIONAL fixture — synthesised from assumed LinkedIn DOM, not captured. Replace with the output of scripts/capture-fixture.js from a real session. -->
+<!-- post.before: share dialog open with text typed, no embedded activity | page: /feed/ -->
+<main class="scaffold-layout__main">
+<div data-id="urn:li:activity:7370000000000000001" class="relative">
+  <div class="feed-shared-update-v2 feed-shared-update-v2--minimal-padding" data-urn="urn:li:activity:7370000000000000001">
+    <div class="update-components-actor"><a href="#" class="update-components-actor__meta-link"><span class="update-components-actor__title">Lorem Ipsum</span></a></div>
+    <div class="update-components-text"><span dir="ltr">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</span></div>
+    <div class="feed-shared-social-action-bar">
+      <button class="artdeco-button artdeco-button--muted social-actions-button react-button__trigger" type="button" aria-pressed="false"><svg data-test-icon="thumbs-up-outline-medium"></svg><span class="artdeco-button__text">Lorem</span></button>
+      <button class="artdeco-button artdeco-button--muted social-actions-button comment-button" type="button"><svg data-test-icon="comment-medium"></svg><span class="artdeco-button__text">Lorem</span></button>
+      <button class="artdeco-button artdeco-button--muted social-actions-button artdeco-dropdown__trigger" type="button" aria-expanded="false"><svg data-test-icon="repost-medium"></svg><span class="artdeco-button__text">Lorem</span></button>
+      <button class="artdeco-button artdeco-button--muted social-actions-button" type="button"><svg data-test-icon="send-privately-medium"></svg><span class="artdeco-button__text">Lorem</span></button>
+    </div>
+    <div class="social-details-social-activity">
+      <div class="comments-comments-list">
+          <article class="comments-comment-entity" data-id="urn:li:comment:(urn:li:activity:7370000000000000001,7370000000000000101)">
+            <div class="comments-comment-meta"><a href="#" class="comments-comment-meta__image-link"></a><a href="#" class="comments-comment-meta__description-container"><h3><span>Lorem Ipsum</span></h3></a></div>
+            <div class="comments-comment-item__main-content"><span dir="ltr">Lorem ipsum dolor sit amet consectetur adipiscing.</span></div>
+            <div class="comments-comment-social-bar">
+              <button class="comments-comment-social-bar__reaction-action-button artdeco-button artdeco-button--muted" type="button" aria-pressed="false"><span>Lorem</span></button>
+              <button class="comments-comment-social-bar__reply-action-button artdeco-button artdeco-button--muted" type="button"><span>Lorem</span></button>
+            </div>
+            <div class="comments-replies-list">
+            </div>
+          </article>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<div id="artdeco-modal-outlet">
+  <div class="artdeco-modal-overlay artdeco-modal-overlay--layer-default artdeco-modal-overlay--is-top-layer">
+    <div role="dialog" aria-labelledby="share-to-linkedin-modal__header" tabindex="-1" class="artdeco-modal artdeco-modal--layer-default share-box">
+      <div class="artdeco-modal__header share-box__header">
+        <button class="share-box__actor-selector artdeco-dropdown__trigger" type="button" aria-expanded="false"><span>Lorem Ipsum</span></button>
+        <h2 id="share-to-linkedin-modal__header" class="visually-hidden">Lorem ipsum</h2>
+        <button class="artdeco-modal__dismiss artdeco-button artdeco-button--circle artdeco-button--tertiary" type="button"><svg data-test-icon="close-medium"></svg></button>
+      </div>
+      <div class="artdeco-modal__content share-creation-state">
+        <div class="share-creation-state__text-editor">
+          <div class="editor-content"><div class="ql-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Lorem ipsum dolor?"><p>Lorem ipsum dolor sit amet, consectetur.</p></div></div>
+        </div>
+      </div>
+      <div class="artdeco-modal__actionbar share-box_actions">
+        <div class="share-creation-state__additional-toolbar">
+          <button class="artdeco-button artdeco-button--circle artdeco-button--tertiary" type="button"><svg data-test-icon="image-medium"></svg></button>
+          <button class="artdeco-button artdeco-button--circle artdeco-button--tertiary" type="button"><svg data-test-icon="emoji-medium"></svg></button>
+        </div>
+        <div class="share-box_actions__primary">
+          <button class="artdeco-button artdeco-button--circle artdeco-button--tertiary" type="button"><svg data-test-icon="clock-medium"></svg></button>
+          <button class="share-actions__primary-action artdeco-button artdeco-button--2 artdeco-button--primary" type="button"><span class="artdeco-button__text">Lorem</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
