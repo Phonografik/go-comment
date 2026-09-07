@@ -335,7 +335,7 @@ describe('export and import', () => {
     expect(await badge()).toEqual({ text: '3', colour: GREEN });
   });
 
-  it('merge unions events, sums days, keeps the earliest badge, keeps local settings', async () => {
+  it('merge unions events, takes the per-type max on shared days, keeps the earliest badge, keeps local settings', async () => {
     boot();
     await onboard(2);
     const local = ev('c', at(2026, 9, 8));
@@ -362,7 +362,7 @@ describe('export and import', () => {
     if (!merged.onboarded) throw new Error('unreachable');
     expect(await repo.events.getValue()).toEqual([theirs, local]);
     expect(await repo.days.getValue()).toEqual({
-      '2026-08-03': { c: 3, r: 0, p: 0, q: 0, n: 0, m: 0 },
+      '2026-08-03': { c: 2, r: 0, p: 0, q: 0, n: 0, m: 0 }, // max(1, 2), not 3
       '2026-08-04': { c: 0, r: 0, p: 1, q: 0, n: 0, m: 0 },
     });
     // back-from-the-dead is genuinely earned by the merge: August days, then 14+ silent days.
@@ -370,7 +370,39 @@ describe('export and import', () => {
     expect(merged.settings).toEqual({ level: 2, memberSince: at(2026, 9, 9).getTime() });
     expect(merged.legacy).toEqual(file.data.legacy);
     expect(merged.health).toEqual({ ...repo.emptyHealth(), lastDetected: { c: local.ts } });
-    expect(merged.derived.lifetime).toMatchObject({ c: 14, p: 3, n: 2 });
+    expect(merged.derived.lifetime).toMatchObject({ c: 13, p: 3, n: 2 });
+  });
+
+  it('merging the same export twice changes nothing', async () => {
+    boot();
+    await onboard(1);
+    await repo.days.setValue({ '2026-08-03': { c: 2, r: 0, p: 1, q: 0, n: 0, m: 0 } });
+    await sendMessage('action', ev('c', clock));
+    const file = await sendMessage('exportData');
+    const once = await sendMessage('importData', { file, mode: 'merge' });
+    const twice = await sendMessage('importData', { file, mode: 'merge' });
+    expect(twice).toEqual(once);
+    expect(await repo.days.getValue()).toEqual({ '2026-08-03': { c: 2, r: 0, p: 1, q: 0, n: 0, m: 0 } });
+    expect(await repo.events.getValue()).toHaveLength(1);
+  });
+
+  it('two exports sharing a compacted day take the per-type max', async () => {
+    boot();
+    await onboard(1);
+    await repo.days.setValue({ '2026-08-03': { c: 3, r: 0, p: 0, q: 0, n: 1, m: 0 } });
+    const file: ExportFile = {
+      schemaVersion: 2,
+      exportedAt: 1,
+      data: {
+        events: [],
+        days: { '2026-08-03': { c: 1, r: 0, p: 2, q: 0, n: 1, m: 0 } },
+        settings: { level: 1, memberSince: 5 },
+        badges: {},
+        health: repo.emptyHealth(),
+      },
+    };
+    await sendMessage('importData', { file, mode: 'merge' });
+    expect(await repo.days.getValue()).toEqual({ '2026-08-03': { c: 3, r: 0, p: 2, q: 0, n: 1, m: 0 } });
   });
 
   it('rejects anything that is not a v2 export file', async () => {
