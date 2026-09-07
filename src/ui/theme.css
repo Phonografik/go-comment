@@ -1,0 +1,48 @@
+/* The popup's design tokens — the Tailwind v4 @theme — plus the one bundled font.
+ *
+ * Silkscreen ships from @fontsource/silkscreen so the built CSS points at a local
+ * assets/…woff2 (MV3 forbids remote fonts; the no-network guard would refuse the
+ * URL anyway). Only the latin subset at 400 is loaded — the wordmark, level names
+ * and stage names are all it is used for.
+ *
+ * Colours come from the dashboard mock (work/deliverables/2026-09-03_parrot-and-
+ * dashboard-mock.md): one tier colour per level, amber ONLY for streak / at-risk,
+ * ink as the ground. */
+@import '@fontsource/silkscreen/latin-400.css';
+
+@theme {
+  --font-pixel: 'Silkscreen', 'Courier New', monospace;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* ground + surfaces (dark ink is the lead; the light alternate is out of scope) */
+  --color-ink: #12242a;
+  --color-surface: #1b3038;
+  --color-surface-2: #213a43;
+  --color-line: rgb(255 255 255 / 0.09);
+  --color-text: #f2f5f4;
+  --color-muted: #8fa3a8;
+  --color-faint: #4e6168;
+
+  /* accents */
+  --color-cyan: #00d4dd;
+  --color-teal: #008b8d;
+  --color-amber: #f0c000; /* streak / at-risk only — never a tier */
+  --color-amber-bg: rgb(240 192 0 / 0.12);
+  --color-cyan-bg: rgb(0 212 221 / 0.14);
+  --color-orange: #ff6b35;
+  --color-violet: #8e6fd1;
+
+  /* one tier colour per level: on-ink, and the deeper variant for fills on light */
+  --color-tier-0: #8fa3a8;
+  --color-tier-0-deep: #5c6e73;
+  --color-tier-1: #00d4dd;
+  --color-tier-1-deep: #008b8d;
+  --color-tier-2: #45c24a;
+  --color-tier-2-deep: #2a8a3c;
+  --color-tier-3: #ff6b35;
+  --color-tier-3-deep: #e5561f;
+  --color-tier-4: #8e6fd1;
+  --color-tier-4-deep: #6b4d9e;
+  --color-tier-5: #ff4757;
+  --color-tier-5-deep: #d92c3c;
+}
