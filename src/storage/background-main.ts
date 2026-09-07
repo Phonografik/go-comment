@@ -8,8 +8,8 @@
 import { browser, type Browser } from 'wxt/browser';
 import { isValidDateKey, toDateKey } from '../core/calendar';
 import { derive } from '../core/derive';
-import { addCounts, compact } from '../core/stats';
-import type { ActivityEvent, Badges, DayRollup, EventType, Legacy, Level, Settings } from '../core/types';
+import { compact } from '../core/stats';
+import type { ActivityEvent, Badges, Counts, DayRollup, EventType, Legacy, Level, Settings } from '../core/types';
 import { EVENT_TYPES, zeroCounts } from '../core/types';
 import type { ActionMessage, ExportFile, Health, StateSnapshot } from '../messaging/protocol';
 import { onMessage } from '../messaging/protocol';
@@ -53,6 +53,12 @@ function isEvent(e: unknown): e is ActivityEvent {
 }
 
 const byTs = (a: ActivityEvent, b: ActivityEvent) => a.ts - b.ts;
+
+function maxCounts(a: Counts, b: Counts): Counts {
+  const out = zeroCounts();
+  for (const t of EVENT_TYPES) out[t] = Math.max(a[t], b[t]);
+  return out;
+}
 
 function cleanEvents(list: unknown[]): ActivityEvent[] {
   return list.filter(isEvent).map(({ t, ts, d }) => ({ t, ts, d }));
@@ -222,8 +228,15 @@ async function importData(msg: { file: ExportFile; mode: 'replace' | 'merge' }, 
       const k = `${e.t}:${e.ts}`;
       if (!byKey.has(k)) byKey.set(k, e);
     }
+    // Merge means "the same history from two places" — the same rule as the event
+    // dedup by t+ts. A day on both sides takes the per-type MAX, never the sum, so
+    // merging one export twice can't double a compacted day. (Two machines that
+    // genuinely both did things on a compacted day undercount slightly — the safer error.)
     const days: DayRollup = { ...local.days };
-    for (const [d, counts] of Object.entries(incoming.days)) days[d] = addCounts(days[d] ?? zeroCounts(), counts);
+    for (const [d, counts] of Object.entries(incoming.days)) {
+      const mine = days[d];
+      days[d] = mine ? maxCounts(mine, counts) : counts;
+    }
     const badges: Badges = { ...incoming.badges };
     for (const [id, at] of Object.entries(local.badges) as Array<[keyof Badges, number]>) {
       const theirs = badges[id];
