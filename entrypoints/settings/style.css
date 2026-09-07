@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+/* Same tokens as entrypoints/popup/style.css. Once the popup branch lands
+   src/ui/theme.css, replace this block with `@import '../../src/ui/theme.css'`. */
+@theme {
+  --color-cyan: #00d4dd;
+  --color-teal: #008b8d;
+  --color-violet: #6b4d9e;
+  --color-amber: #f0c000;
+  --color-orange: #ff6b35;
+  --color-ink: #12242a;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-ink);
+  color: white;
+}
