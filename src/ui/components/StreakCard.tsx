@@ -8,11 +8,16 @@ import { Card } from './Shell';
 
 export type CellState = 'done' | 'frozen' | 'today' | 'risk' | 'missed' | 'future' | 'rest';
 
-export function cellState(day: DayView, riskNow: boolean): CellState {
+/**
+ * `sinceKey` is the install day (settings.memberSince as a day key): an empty
+ * weekday before it is nothing to feel bad about, so it renders neutral, not missed.
+ */
+export function cellState(day: DayView, riskNow: boolean, sinceKey?: string): CellState {
   if (day.shownUp) return 'done';
   if (day.frozen) return 'frozen';
   if (day.today) return riskNow ? 'risk' : 'today';
   if (day.future) return 'future';
+  if (sinceKey !== undefined && day.d < sinceKey) return 'rest';
   return day.weekday ? 'missed' : 'rest';
 }
 
@@ -66,9 +71,11 @@ interface Props {
   derived: Derived;
   /** at risk AND it is past 18:00 — the amber state */
   riskNow: boolean;
+  /** the install day, as a local day key */
+  sinceKey?: string;
 }
 
-export function StreakCard({ derived, riskNow }: Props) {
+export function StreakCard({ derived, riskNow, sinceKey }: Props) {
   const { streak, freezes, weekDays } = derived;
   return (
     <Card className="flex flex-col gap-2">
@@ -101,7 +108,7 @@ export function StreakCard({ derived, riskNow }: Props) {
       </div>
       <div className="flex items-end justify-between">
         {weekDays.map((day, i) => (
-          <WeekCell key={day.d} day={day} index={i} state={cellState(day, riskNow)} />
+          <WeekCell key={day.d} day={day} index={i} state={cellState(day, riskNow, sinceKey)} />
         ))}
       </div>
     </Card>

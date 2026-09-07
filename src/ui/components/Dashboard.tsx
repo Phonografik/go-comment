@@ -3,7 +3,7 @@
 // health row · footer. Built purely from a StateSnapshot; `now` is a prop so
 // tests can pin the clock.
 import { useEffect, useMemo } from 'react';
-import { BADGES, type Legacy } from '@/src/core';
+import { BADGES, toDateKey, type Legacy } from '@/src/core';
 import type { Health, StateSnapshot } from '@/src/messaging/protocol';
 import { MOULT_BODY, MOULT_TITLE, NUDGE_BODY, NUDGE_TITLE, PRIZES_LINE, stageLine, stageName, stageNote, stageTier, tierVar } from './copy';
 import { formatDay } from './format';
@@ -29,7 +29,7 @@ interface Props {
 }
 
 export function Dashboard({ snapshot, now, onBadges, onSettings }: Props) {
-  const { derived, badges, legacy, health } = snapshot;
+  const { derived, settings, badges, legacy, health } = snapshot;
   const riskNow = derived.atRisk && now.getHours() >= NUDGE_HOUR;
 
   // The moult card needs the stage the popup last showed — see moult.ts.
@@ -60,7 +60,7 @@ export function Dashboard({ snapshot, now, onBadges, onSettings }: Props) {
           <Notice tone="plain" title={MOULT_TITLE} body={MOULT_BODY} sprite={moulted} />
         ) : null}
 
-        <StreakCard derived={derived} riskNow={riskNow} />
+        <StreakCard derived={derived} riskNow={riskNow} sinceKey={toDateKey(new Date(settings.memberSince))} />
         <LevelCard derived={derived} />
         <TodayCard derived={derived} />
 

@@ -242,13 +242,22 @@ describe('dashboard — Monday moult', () => {
 });
 
 describe('dashboard — fresh user', () => {
+  it('renders the weekdays before the install day as neutral, not missed', async () => {
+    mockBackground({ ...FRESH, settings: { ...FRESH.settings, memberSince: new Date(2026, 8, 9, 9, 0).getTime() } });
+    render(<App now={MIDWEEK_NOW} />);
+    await screen.findByText('GO COMMENT');
+    expect(screen.getAllByTestId('week-cell').map((c) => c.getAttribute('data-state'))).toEqual(['rest', 'rest', 'today', 'future', 'future', 'future', 'future']);
+  });
+
   it('shows the egg, a zero streak and the compact today row', async () => {
     mockBackground(FRESH);
     render(<App now={MIDWEEK_NOW} />);
     await screen.findByText('GO COMMENT');
     expect(screen.getByTestId('stage-name').textContent).toBe('Egg');
     expect(screen.getByText('Nothing counted for two weeks. One action hatches it.')).toBeTruthy();
+    expect(screen.getByText('Stage 0 · Hatchling on the first action')).toBeTruthy();
     expect(screen.getByTestId('streak').textContent).toBe('0');
+    expect(screen.getAllByTestId('week-cell').map((c) => c.getAttribute('data-state'))).toEqual(['missed', 'missed', 'today', 'future', 'future', 'future', 'future']);
     expect(screen.getByTestId('today-compact')).toBeTruthy();
     expect(screen.getByTestId('week-points').textContent).toBe('0 / 25 this week');
   });

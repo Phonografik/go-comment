@@ -45,6 +45,7 @@ export function stageTarget(stage: number): number {
 /** "Stage 4 · Loudmouth at 160" — what the next stage costs. */
 export function stageLine(stage: number): string {
   if (stage >= 6) return 'Stage 6 · top of the tree';
+  if (stage === 0) return `Stage 0 · ${stageName(1)} on the first action`;
   return `Stage ${stage} · ${stageName(stage + 1)} at ${stageTarget(stage + 1)}`;
 }
 
