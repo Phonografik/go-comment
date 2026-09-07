@@ -1,0 +1,228 @@
+<!doctype html>
+<!--
+  The frame around the popup shots for the Chrome Web Store, driven by
+  render.mjs: it opens this file, calls compose({ kind, width, height, font,
+  icon, shot, title, body }) and screenshots the viewport at the store's exact
+  size. Everything arrives as a data: URI so the page loads nothing.
+
+  Palette = src/ui/theme.css: ink ground, cyan accent, muted grey. Silkscreen
+  for the wordmark and the headline, system sans for the rest. No LinkedIn
+  logo, wordmark or blue anywhere — the tile and marquee don't even say the word.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Go Comment — store asset</title>
+    <style>
+      :root {
+        --ink: #12242a;
+        --surface: #1b3038;
+        --line: rgba(255, 255, 255, 0.12);
+        --text: #f2f5f4;
+        --muted: #8fa3a8;
+        --faint: #4e6168;
+        --cyan: #00d4dd;
+      }
+      html,
+      body {
+        margin: 0;
+        background: var(--ink);
+        color: var(--text);
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage {
+        position: relative;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      #stage::before {
+        /* one soft cyan glow behind the popup, so the frame doesn't float on flat ink */
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 42% 60% at var(--glow-x, 75%) 50%, rgba(0, 212, 221, 0.13), transparent 70%);
+      }
+      .wordmark {
+        font-family: 'Silkscreen', 'Courier New', monospace;
+        color: var(--cyan);
+        letter-spacing: 1px;
+      }
+      .title {
+        font-family: 'Silkscreen', 'Courier New', monospace;
+        color: var(--text);
+        line-height: 1.25;
+      }
+      .body {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .icon {
+        image-rendering: pixelated;
+        display: block;
+      }
+      .shot {
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+        background: var(--ink);
+      }
+
+      /* 1280×800 screenshot: text left, the popup at 1.2× on the right */
+      .screenshot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 104px 0 96px;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .screenshot .copy {
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .screenshot .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .screenshot .brand .icon {
+        width: 48px;
+        height: 48px;
+      }
+      .screenshot .wordmark {
+        font-size: 18px;
+      }
+      .screenshot .title {
+        font-size: 30px;
+      }
+      .screenshot .body {
+        font-size: 19px;
+        max-width: 540px;
+      }
+      .screenshot .foot {
+        color: var(--faint);
+        font-size: 14px;
+        margin-top: 10px;
+      }
+      .screenshot .shot {
+        width: 384px;
+        height: 720px;
+      }
+
+      /* 440×280 tile */
+      .tile {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        padding: 0 40px;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .tile .icon {
+        width: 112px;
+        height: 112px;
+        flex: none;
+      }
+      .tile .wordmark {
+        font-size: 26px;
+        letter-spacing: 1.5px;
+      }
+      .tile .body {
+        font-size: 15px;
+        margin-top: 10px;
+      }
+
+      /* 1400×560 marquee: brand left, the dashboard bleeding off the bottom right */
+      .marquee {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 140px 0 120px;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .marquee .copy {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 640px;
+      }
+      .marquee .brand {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      .marquee .brand .icon {
+        width: 96px;
+        height: 96px;
+      }
+      .marquee .wordmark {
+        font-size: 40px;
+        letter-spacing: 2px;
+      }
+      .marquee .body {
+        font-size: 22px;
+        max-width: 600px;
+      }
+      .marquee .shot {
+        width: 384px;
+        height: 720px;
+        align-self: flex-start;
+        margin-top: 88px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script>
+      const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+
+      const LAYOUTS = {
+        screenshot: ({ icon, shot, title, body }) => `
+          <div class="screenshot">
+            <div class="copy">
+              <div class="brand"><img class="icon" src="${icon}" alt=""><div class="wordmark">GO COMMENT</div></div>
+              <div class="title">${esc(title)}</div>
+              <div class="body">${esc(body)}</div>
+              <div class="foot">Free and open source. No account, no server, nothing leaves your device.</div>
+            </div>
+            <img class="shot" src="${shot}" alt="">
+          </div>`,
+        tile: ({ icon }) => `
+          <div class="tile">
+            <img class="icon" src="${icon}" alt="">
+            <div>
+              <div class="wordmark">GO COMMENT</div>
+              <div class="body">Keep score of your own comments, posts, connections and DMs. A weekday streak and a parrot that nags. Nothing leaves your device.</div>
+            </div>
+          </div>`,
+        marquee: ({ icon, shot }) => `
+          <div class="marquee">
+            <div class="copy">
+              <div class="brand"><img class="icon" src="${icon}" alt=""><div class="wordmark">GO COMMENT</div></div>
+              <div class="body">Keep score of your own comments, posts, connections and DMs. A weekday streak, a weekly target, and a pixel parrot that grows when you hit it and moults when you don’t. Nothing leaves your device.</div>
+            </div>
+            <img class="shot" src="${shot}" alt="">
+          </div>`,
+      };
+
+      window.compose = (data) => {
+        const stage = document.getElementById('stage');
+        stage.style.width = `${data.width}px`;
+        stage.style.height = `${data.height}px`;
+        stage.style.setProperty('--glow-x', data.kind === 'tile' ? '20%' : '78%');
+        const face = document.createElement('style');
+        face.textContent = `@font-face { font-family: 'Silkscreen'; font-weight: 400; src: url(${data.font}) format('woff2'); }`;
+        document.head.append(face);
+        stage.innerHTML = LAYOUTS[data.kind](data);
+      };
+    </script>
+  </body>
+</html>

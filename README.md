@@ -50,7 +50,21 @@ Then open LinkedIn, do something, and click the toolbar icon.
 
 ## Screenshots
 
-<!-- screenshots: filled in after the popup lands -->
+<table>
+  <tr>
+    <td><img src="docs/screenshots/dashboard.png" width="320" alt="The dashboard: a Show-off stage parrot, a 12-day weekday streak with one freeze banked and Monday frozen, 58 of 111 points this week, and today's six counters against their caps"></td>
+    <td><img src="docs/screenshots/badges.png" width="320" alt="The badges screen: five of twelve unlocked, each with the date it was earned"></td>
+    <td><img src="docs/screenshots/settings.png" width="320" alt="Settings: the six weekly targets with Turn Dial to 11 selected, a button to export or import your data, and the version"></td>
+  </tr>
+  <tr>
+    <td>Mid-week on Turn Dial to 11: the parrot, the streak (Monday covered by a freeze), the week so far, today's counts.</td>
+    <td>Badges are earned once and never taken away.</td>
+    <td>Settings: change level, export or import, privacy, version.</td>
+  </tr>
+</table>
+
+Rendered from the real popup with a seeded history by `scripts/store-assets/render.mjs` (which also
+produces the Chrome Web Store assets). Every number is what the rules engine derives from that seed.
 
 ## What it never does
 
