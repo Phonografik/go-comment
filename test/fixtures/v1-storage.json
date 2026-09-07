@@ -1,0 +1,30 @@
+{
+  "selectedLevel": "go-go-go",
+  "weeklyTarget": 50,
+  "todayStats": { "comments": 4, "connections": 2, "posts": 1 },
+  "totalStats": { "comments": 312, "connections": 47, "posts": 19 },
+  "currentWeekPoints": 37,
+  "weekStartDate": "2025-08-03",
+  "weeklyStats": { "comments": 13, "connections": 4, "posts": 2 },
+  "currentStreak": 3,
+  "longestStreak": 4,
+  "bestWeek": 92,
+  "memberSince": "2025-05-19T08:03:27.412Z",
+  "lastWeekGoalMet": true,
+  "totalWeeksCompleted": 9,
+  "lastActiveWeek": "2025-08-03",
+  "achievements": ["first-week", "streak-master", "overachiever"],
+  "weeklyHistory": [
+    { "weekStart": "2025-05-18", "points": 52, "target": 25, "goalMet": true, "streak": 1 },
+    { "weekStart": "2025-05-25", "points": 57, "target": 25, "goalMet": true, "streak": 2 },
+    { "weekStart": "2025-06-01", "points": 60, "target": 25, "goalMet": true, "streak": 3 },
+    { "weekStart": "2025-06-08", "points": 66, "target": 25, "goalMet": true, "streak": 4 },
+    { "weekStart": "2025-06-15", "points": 31, "target": 50, "goalMet": false, "streak": 0 },
+    { "weekStart": "2025-06-22", "points": 92, "target": 50, "goalMet": true, "streak": 1 },
+    { "weekStart": "2025-06-29", "points": 55, "target": 50, "goalMet": true, "streak": 2 },
+    { "weekStart": "2025-07-06", "points": 44, "target": 50, "goalMet": false, "streak": 0 },
+    { "weekStart": "2025-07-13", "points": 61, "target": 50, "goalMet": true, "streak": 1 },
+    { "weekStart": "2025-07-20", "points": 64, "target": 50, "goalMet": true, "streak": 2 },
+    { "weekStart": "2025-07-27", "points": 58, "target": 50, "goalMet": true, "streak": 3 }
+  ]
+}
