@@ -21,7 +21,7 @@
     "test": "vitest run --exclude 'test/build/**'",
     "test:build": "vitest run test/build",
     "guard": "node scripts/no-network-guard.mjs",
-    "smoke": "playwright test --pass-with-no-tests",
+    "smoke": "WXT_E2E=true wxt build && playwright test --pass-with-no-tests",
     "icons": "node scripts/render-icons.mjs",
     "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run build:firefox && npm run test:build && npm run guard",
     "postinstall": "wxt prepare"
