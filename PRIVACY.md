@@ -92,8 +92,8 @@ Nothing is uploaded anywhere in the process, and no download permission is used.
 ## Deleting your data
 
 - **Uninstall the extension.** Your browser deletes its storage with it.
-- **Or reset from the settings page**, which clears everything listed above and starts you from
-  zero.
+- **Or reset from the settings page**, which clears every count, badge and carried-over total.
+  Your level stays until you uninstall.
 
 ## Accounts, children, and everyone else
 
