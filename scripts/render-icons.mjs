@@ -1,38 +1,31 @@
-// Renders the extension icons (16/32/48/128) from a pixel grid, with no image
-// tooling — a tiny PNG encoder over node's zlib. The grid is placeholder art
-// until the parrot sprites land in src/ui/sprites/; then this script points at
-// the stage-3 parrot and re-renders. Run: `npm run icons`.
+// Renders the extension icons (16/32/48/128) from ICON_16 — the toolbar grid in
+// src/ui/sprites/parrot.ts, the same data the popup draws from — with no image
+// tooling: a tiny PNG encoder over node's zlib. Node 24 strips the types on
+// import, which is why parrot.ts stays free of non-erasable syntax.
+//
+// 32/48/128 are the 16-grid scaled 2× / 3× / 8×, nearest-neighbour, so every
+// grid pixel stays a square block (the mock's decision — the 24-grid stages do
+// not scale to 16). Run: `npm run icons`.
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ICON_16, PALETTE } from '../src/ui/sprites/parrot.ts';
 
-// Palette index → RGBA. 0 is transparent.
-const PALETTE = [
-  [0, 0, 0, 0],
-  [0x00, 0xd4, 0xdd, 255], // cyan
-  [0x12, 0x24, 0x2a, 255], // ink
-  [0xff, 0xff, 0xff, 255], // white
-  [0xff, 0x6b, 0x35, 255], // orange
-];
+const OUT_DIR = fileURLToPath(new URL('../public/icon/', import.meta.url));
+const SIZES = [16, 32, 48, 128];
 
-// 16×16 placeholder: a cyan rounded tile with an ink "G".
-const GRID = [
-  '0111111111111110',
-  '1111111111111111',
-  '1111111111111111',
-  '1111122222211111',
-  '1111222222221111',
-  '1112221111222111',
-  '1112211111112111',
-  '1112211111111111',
-  '1112211122222111',
-  '1112211122222111',
-  '1112211111122111',
-  '1112221111222111',
-  '1111222222221111',
-  '1111122222211111',
-  '1111111111111111',
-  '0111111111111110',
-].map((row) => [...row].map(Number));
+/** '#RRGGBB' → [r, g, b, 255]; null (transparent) → [0, 0, 0, 0]. */
+function rgba(hex) {
+  if (!hex) return [0, 0, 0, 0];
+  return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).concat(255);
+}
+
+// Character grid → palette-index grid, palette → RGBA table, so the encoder
+// stays a plain index lookup.
+const KEYS = Object.keys(PALETTE);
+const RGBA_PALETTE = KEYS.map((k) => rgba(PALETTE[k]));
+const toIndexGrid = (grid) => grid.map((row) => [...row].map((ch) => KEYS.indexOf(ch)));
 
 function crc32(buf) {
   let c;
@@ -55,7 +48,12 @@ function chunk(type, data) {
   return Buffer.concat([len, body, crc]);
 }
 
-export function encodePng(size, grid, palette = PALETTE) {
+/**
+ * Encode a square palette-index grid as an RGBA PNG of `size` px, nearest-
+ * neighbour scaled. `size` must be a whole multiple of the grid size.
+ */
+export function encodePng(size, grid, palette = RGBA_PALETTE) {
+  if (size % grid.length !== 0) throw new Error(`${size}px is not a whole multiple of a ${grid.length}-grid`);
   const scale = size / grid.length;
   const raw = Buffer.alloc((size * 4 + 1) * size);
   for (let y = 0; y < size; y++) {
@@ -82,9 +80,8 @@ export function encodePng(size, grid, palette = PALETTE) {
 }
 
 if (process.argv[1] && process.argv[1].endsWith('render-icons.mjs')) {
-  mkdirSync('public/icon', { recursive: true });
-  for (const size of [16, 32, 48, 128]) {
-    writeFileSync(`public/icon/${size}.png`, encodePng(size, GRID));
-  }
-  console.log('icons rendered: public/icon/{16,32,48,128}.png');
+  const grid = toIndexGrid(ICON_16);
+  mkdirSync(OUT_DIR, { recursive: true });
+  for (const size of SIZES) writeFileSync(join(OUT_DIR, `${size}.png`), encodePng(size, grid));
+  console.log(`icons rendered from ICON_16: ${SIZES.map((s) => `${s}.png`).join(', ')} in public/icon/`);
 }
