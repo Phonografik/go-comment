@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ExportFile } from '../../src/messaging/protocol';
-import { validateExportFile } from './validate';
+import { validateExportFile } from '../../entrypoints/settings/validate';
 
 const good = (): ExportFile => ({
   schemaVersion: 2,
