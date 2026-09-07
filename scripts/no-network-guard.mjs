@@ -19,6 +19,7 @@ const PRIMITIVES = [/\bfetch\s*\(/, /\bXMLHttpRequest\b/, /\bWebSocket\b/, /\bna
 const URL_ALLOWLIST = [
   'https://www.linkedin.com/*', // the content-script match pattern
   'https://github.com/Phonografik/go-comment', // the "Report" link in the popup
+  'https://phonografik.github.io/go-comment/', // PRIVACY.md on GitHub Pages, linked from settings
   'http://www.w3.org/', // SVG / XHTML namespace constants inside React DOM
   'https://react.dev/', // React's production error-decoder links
 ];

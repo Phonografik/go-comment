@@ -21,19 +21,23 @@
     "test": "vitest run --exclude 'test/build/**'",
     "test:build": "vitest run test/build",
     "guard": "node scripts/no-network-guard.mjs",
+    "smoke": "playwright test --pass-with-no-tests",
     "icons": "node scripts/render-icons.mjs",
     "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run build:firefox && npm run test:build && npm run guard",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@webext-core/messaging": "^4.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@webext-core/fake-browser": "^2.0.1",
     "@wxt-dev/module-react": "^1.1.5",
     "eslint": "^9.39.5",
     "eslint-plugin-react-hooks": "^7.1.1",
