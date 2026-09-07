@@ -6,3 +6,4 @@ export * from './streak';
 export * from './badges';
 export * from './mascot';
 export * from './derive';
+export * from './migrate';
