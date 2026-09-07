@@ -160,23 +160,34 @@ describe('settings page', () => {
     expect(privacy?.textContent).toBe('Privacy policy');
   });
 
-  it('tells a user who has not onboarded to pick a level first, and disables Reset', async () => {
+  it('tells a user who has not onboarded to pick a level first, and disables Export and Reset', async () => {
     send.mockImplementation(async (type) => {
       if (type === 'getState') return { onboarded: false } satisfies StateSnapshot;
       throw new Error(`unexpected message ${type}`);
     });
     await render();
     expect(text()).toContain('pick a level in the popup first');
+    expect(button('Export').disabled).toBe(true);
+    expect(text()).toContain('Nothing to export yet');
     expect(button('Reset all activity').disabled).toBe(true);
     expect(text()).toContain('Nothing to reset yet.');
+    await click(button('Export'));
+    expect(send).not.toHaveBeenCalledWith('exportData');
   });
 
-  it('surfaces a background that does not answer', async () => {
+  it('surfaces a background that does not answer, and keeps Export disabled', async () => {
     send.mockImplementation(async () => {
       throw new Error('no receiver');
     });
     await render();
     expect(container.querySelector('[role=alert]')?.textContent).toContain('no receiver');
+    expect(button('Export').disabled).toBe(true);
+    expect(text()).not.toContain('Nothing to export yet');
+  });
+
+  it('enables Export once getState says onboarded', async () => {
+    await render();
+    expect(button('Export').disabled).toBe(false);
   });
 });
 

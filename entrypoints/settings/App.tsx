@@ -103,7 +103,7 @@ export default function App() {
         )}
       </Section>
 
-      <ExportSection />
+      <ExportSection snapshot={state} />
       <ImportSection onImported={setState} />
       <ResetSection settings={settings} onReset={setState} />
 
@@ -168,7 +168,10 @@ type ExportState =
 /** How long the download link stays live after it's clicked before its object URL is revoked. */
 const REVOKE_AFTER_MS = 1500;
 
-function ExportSection() {
+/** Export needs an onboarded store — the background refuses otherwise, so the button waits for getState. */
+function ExportSection({ snapshot }: { snapshot: StateSnapshot | null }) {
+  const enabled = snapshot?.onboarded === true;
+  const notYet = snapshot !== null && !snapshot.onboarded;
   const [exp, setExp] = useState<ExportState>({ status: 'idle' });
   const linkRef = useRef<HTMLAnchorElement>(null);
   const autoClicked = useRef<string | null>(null);
@@ -208,9 +211,10 @@ function ExportSection() {
         text, names or links.
       </p>
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" className={primary} onClick={onExport} disabled={exp.status === 'working'}>
+        <button type="button" className={primary} onClick={onExport} disabled={!enabled || exp.status === 'working'}>
           {exp.status === 'working' ? 'Preparing…' : 'Export'}
         </button>
+        {notYet && <span className="text-xs text-white/50">Nothing to export yet — pick a level in the popup first.</span>}
         {exp.status === 'ready' && (
           <a ref={linkRef} href={exp.url} download={exp.filename} onClick={onLinkClick} className="text-sm text-cyan underline">
             Download {exp.filename}
